@@ -1,16 +1,19 @@
-version: "2"
+version: "2.1"
 services:
 
   eurekaserver:
     image: eurekaimg
     build: eureka/
-    restart: always
+#    restart: always
     network_mode: host
     container_name: eureka
     ports:
-    - 9090:9090
+      - 9090:9090
     expose:
-    - 9090
+      - 9090
+    healthcheck:
+      test: "exit 0"
+
 
   configserver:
     image: configimg
@@ -19,16 +22,19 @@ services:
     network_mode: host
     container_name: config
     ports:
-    - 8888:8888
+      - 8888:8888
     expose:
-    - 8888
+      - 8888
+    healthcheck:
+      test: "exit 0"
+
 
   zuulservice:
     image: zuulimg
     build: zuulapigateway/
-    restart: always
+#    restart: always
     network_mode: host
-    container_name: zuul-api-gateway
+    container_name: zuul
     depends_on:
       - eurekaserver
       - configserver
@@ -36,6 +42,9 @@ services:
       - 8091:8091
     expose:
       - 8091
+    healthcheck:
+      test: "exit 0"
+
 
   mongoservice:
     image: mongo
@@ -44,13 +53,15 @@ services:
     container_name: db
     ports:
       - 27017:27017
+    healthcheck:
+      test: "exit 0"
 
   muzixservice:
-    image: muzix
-    build: Muzix Assignment 2/
-    restart: always
+    image: muziximg
+    build: muzix/
+#    restart: always
     network_mode: host
-    container_name: muzix-app
+    container_name: muzix
     depends_on:
       - eurekaserver
       - configserver
@@ -59,3 +70,5 @@ services:
       - 8080:8080
     expose:
       - 8080
+    healthcheck:
+      test: "exit 0"
