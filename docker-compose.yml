@@ -8,16 +8,16 @@ services:
     network_mode: host
     container_name: eureka
     ports:
-      - 9090:9090
+      - 8761:8761
     expose:
-      - 9090
+      - 8761
     healthcheck:
       test: "exit 0"
 
 
   configserver:
     image: configimg
-    build: configuration/
+    build: config-server/
 #    restart: always
     network_mode: host
     container_name: config
